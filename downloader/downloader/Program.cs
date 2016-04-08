@@ -11,7 +11,7 @@ namespace downloader
 
     class Program
     {
-        private static string preurl = "http://wwwwwwww.nasdaq.com/earnings/report/";
+        private static string preurl = "http://www.nasdaq.com/earnings/report/";
         static void Main(string[] args)
         {
             WebCrawlerService wc = new WebCrawlerService();
