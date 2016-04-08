@@ -79,50 +79,68 @@ namespace downloader
         }
         private string getTitle(string str)
         {
-            if (!IsValid(str)) return "";
-            MatchCollection matches = Regex.Matches(str, titleRegex);
             string res="";
-            foreach(var ma in matches)
+            try
             {
-                Regex reg = new Regex(@"<br>");
-                string temp = reg.Replace(ma.ToString(), " ");
-                temp = temp.Substring(4, temp.Length - 4 - 5);
-                res += temp + "  ";
+                MatchCollection matches = Regex.Matches(str, titleRegex);
+                foreach(var ma in matches)
+                {
+                    Regex reg = new Regex(@"<br>");
+                    string temp = reg.Replace(ma.ToString(), " ");
+                    temp = temp.Substring(4, temp.Length - 4 - 5);
+                    res += temp + "  ";
+                }
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
             }
             return res+"\r\n";
         }
         private string getTableContent(string str)
         {
             string res = "";
-            if (!IsValid(str)) return "";
-            MatchCollection matches = Regex.Matches(str, trRegex);
-            foreach (var ma in matches)
+            try
             {
-                MatchCollection tdmatches = Regex.Matches(ma.ToString(), tdRegex);
-                foreach(var td in tdmatches)
+                MatchCollection matches = Regex.Matches(str, trRegex);
+                foreach (var ma in matches)
                 {
-                    string tdstr = td.ToString().Trim();
-                    string temp = tdstr.Substring(4,tdstr.Length-9);
-                    res += temp + tab;
+                    MatchCollection tdmatches = Regex.Matches(ma.ToString(), tdRegex);
+                    foreach(var td in tdmatches)
+                    {
+                        string tdstr = td.ToString().Trim();
+                        string temp = tdstr.Substring(4,tdstr.Length-9);
+                        res += temp + tab;
+                    }
+                    res += "\r\n";
                 }
-                res += "\r\n";
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
             }
             return res;
         }
         private string getTableResult(string html)
         {
-            if (!IsValid(html)) return "";
-            Regex reg = new Regex(@"(\n|\r|\t)+");
-            string str = reg.Replace(html, "");
             StringBuilder sb = new StringBuilder();
-            MatchCollection matches = Regex.Matches(str, theadRegex);
-            if (matches.Count != 1)
-                return "";
-            string title = getTitle(matches[0].Value);
-            sb.Append(title);
-            string content = getTableContent(str);
-            Console.WriteLine(title);
-            sb.Append(content);
+            try
+            {
+                Regex reg = new Regex(@"(\n|\r|\t)+");
+                string str = reg.Replace(html, "");
+                MatchCollection matches = Regex.Matches(str, theadRegex);
+                if (matches.Count != 1)
+                    return "";
+                string title = getTitle(matches[0].Value);
+                sb.Append(title);
+                string content = getTableContent(str);
+                Console.WriteLine(title);
+                sb.Append(content);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
             return sb.ToString();
         }
         private string getSpecifyContent(string istr, string startString, string endString)
