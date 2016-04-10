@@ -44,16 +44,21 @@ namespace downloader
         }
         private string getSpecifyContentByRegex(string html)
         {
-            if (!IsValid(html))
-                return "";
-            Regex reg = new Regex(@"(\n|\r|\t)+");
-            string str = reg.Replace(html, "");
-            MatchCollection matches = Regex.Matches(str,divRegex);
-            foreach(var ma in matches)
+            try
             {
-                Match mat = Regex.Match(ma.ToString().Trim(), label);
-                if (mat.Success)
-                    return ma.ToString().Trim();
+                Regex reg = new Regex(@"(\n|\r|\t)+");
+                string str = reg.Replace(html, "");
+                MatchCollection matches = Regex.Matches(str,divRegex);
+                foreach(var ma in matches)
+                {
+                    Match mat = Regex.Match(ma.ToString().Trim(), label);
+                    if (mat.Success)
+                        return ma.ToString().Trim();
+                }
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
             }
             return "";
         }
